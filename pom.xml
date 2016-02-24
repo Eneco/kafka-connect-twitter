@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.eneco.trading</groupId>
+    <artifactId>kafka-connect-twitter</artifactId>
+    <packaging>jar</packaging>
+    <version>0.1</version>
+    <name>kafka-connect-twitter</name>
+    <organization>
+        <name>Eneco</name>
+        <url>http://energytradeuk.eneco.nl</url>
+    </organization>
+    <url>http://energytradeuk.eneco.nl/</url>
+    <description>
+        A Kafka Connect Twitter source connector for copying data between Twitter and Kafka.
+    </description>
+
+    <scm>
+        <connection>scm:git:git@github.com/Eneco/kafka-connect-twitter.git</connection>
+        <url>https://github.com/Eneco/kafka-connect-twitter</url>
+        <developerConnection>scm:git:git@github.com/Eneco/kafka-connect-twitter.git
+        </developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>rollus</id>
+            <name>Roel Reijerse</name>
+            <organization>Eneco</organization>
+        </developer>
+        <developer>
+            <id>andrewstevenson</id>
+            <name>Andrew Stevenson</name>
+            <organization>Datamountaineer</organization>
+        </developer>
+        <developer>
+            <id>GodlyLudu</id>
+            <name>Roel Reijerse</name>
+            <organization>Eneco</organization>
+        </developer>
+        <developer>
+            <id>dudebowski</id>
+            <name>Adriaan Mutter</name>
+            <organization>Eneco</organization>
+        </developer>
+        <developer>
+            <id>Chrizje</id>
+            <name>Christian De Jong</name>
+            <organization>Eneco</organization>
+        </developer>
+    </developers>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <scala.version>2.11.7</scala.version>
+        <confluent.version>2.0.1</confluent.version>
+        <kafka.version>0.9.0.1</kafka.version>
+        <hosebird.version>2.2.0</hosebird.version>
+        <jsr305.version>1.3.9</jsr305.version>
+        <mockito.version>1.10.19</mockito.version>
+        <scalatest.version>3.0.0-M1</scalatest.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <confluent.maven.repo>http://packages.confluent.io/maven/</confluent.maven.repo>
+        <cloudera.maven.repo>https://repository.cloudera.com/artifactory/cloudera-repos</cloudera.maven.repo>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>confluent</id>
+            <name>Confluent</name>
+            <url>${confluent.maven.repo}</url>
+        </repository>
+        <repository>
+            <id>cdh.repo</id>
+            <name>Cloudera Repositories</name>
+            <url>${cloudera.maven.repo}</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>connect-api</artifactId>
+            <version>${kafka.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>${jsr305.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_2.11</artifactId>
+            <version>${scalatest.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <!-- make sure wrong scala version is not pulled in -->
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>hbc-core</artifactId>
+            <version>${hosebird.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/test/resources</directory>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>copy-resources</goal>
+                            <goal>testResources</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.scalatest</groupId>
+                <artifactId>scalatest-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <recompileMode>incremental</recompileMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>scala-compile</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
+</project>
