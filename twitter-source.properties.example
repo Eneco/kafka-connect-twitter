@@ -1,0 +1,8 @@
+name=twitter-source
+connector.class=com.eneco.trading.kafka.connect.twitter.TwitterSourceConnector
+tasks.max=1
+topic=test
+twitter.consumerkey=
+twitter.consumersecret=
+twitter.token=
+twitter.secret=
