@@ -120,7 +120,7 @@
         </dependency>
         <dependency>
             <groupId>com.twitter</groupId>
-            <artifactId>hbc-core</artifactId>
+            <artifactId>hbc-twitter4j</artifactId>
             <version>${hosebird.version}</version>
         </dependency>
     </dependencies>

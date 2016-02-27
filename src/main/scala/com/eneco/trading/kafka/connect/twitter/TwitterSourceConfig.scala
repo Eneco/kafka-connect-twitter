@@ -30,7 +30,7 @@ object TwitterSourceConfig {
         .define(CONSUMER_SECRET_CONFIG, Type.STRING, Importance.HIGH, CONSUMER_SECRET_CONFIG_DOC)
         .define(TOKEN_CONFIG, Type.STRING, Importance.HIGH, TOKEN_CONFIG_DOC)
         .define(SECRET_CONFIG, Type.STRING, Importance.HIGH, SECRET_CONFIG_DOC)
-        .define(TRACK_TERMS, Type.LIST, TRACK_TERMS_DEFAULT, Importance.LOW, SECRET_CONFIG_DOC)
+        .define(TRACK_TERMS, Type.LIST, TRACK_TERMS_DEFAULT, Importance.LOW, TRACK_TERMS_DOC)
         .define(TWITTER_APP_NAME, Type.STRING, TWITTER_APP_NAME_DEFAULT, Importance.HIGH, TWITTER_APP_NAME_DOC)
 }
 
