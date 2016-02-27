@@ -1,9 +1,16 @@
 package com.eneco.trading.kafka.connect.twitter
 
+import java.util.Collections
 import java.util.concurrent.{Executors, TimeUnit, LinkedBlockingQueue}
 
+import com.sun.xml.internal.ws.api.message.Packet
 import com.twitter.hbc.httpclient.BasicClient
 import com.twitter.hbc.twitter4j.Twitter4jStatusClient
+import org.apache.kafka.connect.data.Schema;
+import org.apache.kafka.connect.data.SchemaBuilder;
+import org.apache.kafka.connect.data.Struct;
+import org.apache.kafka.connect.source.SourceRecord;
+import org.apache.kafka.connect.data.Struct
 import org.apache.kafka.connect.source.SourceRecord
 import twitter4j.{StallWarning, Status, StatusDeletionNotice, StatusListener}
 import scala.collection.JavaConverters._
@@ -53,14 +60,17 @@ class TwitterStreamReader(client: BasicClient, rawqueue: LinkedBlockingQueue[Str
       log.warn("Client connection closed unexpectedly: ", client.getExitEvent.getMessage)
       return null;
     }
-    Option(statusqueue.poll(1, TimeUnit.SECONDS)) match {
-      case Some(msg) => {
-        log.info(msg.getText)
-        return List[SourceRecord]()
+    return Option(statusqueue.poll(1, TimeUnit.SECONDS)) match {
+      case Some(status) => {
+        val sch = SchemaBuilder.struct().name("status")
+            .field("text",Schema.STRING_SCHEMA)
+          .field("user",Schema.STRING_SCHEMA)
+          .build()
+        val s = new Struct(sch).put("text",status.getText).put("user",status.getUser.getScreenName)
+        List[SourceRecord](new SourceRecord(Collections.singletonMap("TODO", "TODO"), Collections.singletonMap("TODO2", "TODO2"), "test", sch, s))
       }
-      case _ => return List[SourceRecord]()
+      case _ => List[SourceRecord]()
     }
-    List[SourceRecord]()
   }
 
   /**
