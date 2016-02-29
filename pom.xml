@@ -120,8 +120,13 @@
         </dependency>
         <dependency>
             <groupId>com.twitter</groupId>
-            <artifactId>hbc-core</artifactId>
+            <artifactId>hbc-twitter4j</artifactId>
             <version>${hosebird.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.8.0</version>
         </dependency>
     </dependencies>
 

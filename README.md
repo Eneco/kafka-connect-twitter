@@ -4,3 +4,8 @@
 Kafka Connect Source for Twitter
 
 Work in progress!
+
+## Todo:
+ - [ ] Extend
+ - [ ] Test
+ - [ ] Document

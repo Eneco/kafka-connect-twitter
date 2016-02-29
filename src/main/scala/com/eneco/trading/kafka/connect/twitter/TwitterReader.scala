@@ -23,16 +23,16 @@ object TwitterReader {
       config.getString(TwitterSourceConfig.TOKEN_CONFIG),
       config.getString(TwitterSourceConfig.SECRET_CONFIG))
 
-    val queue= new LinkedBlockingQueue[String](10000)
+    val queue = new LinkedBlockingQueue[String](10000)
 
     val client = new ClientBuilder()
-                    .name(config.getString(TwitterSourceConfig.TWITTER_APP_NAME))
-                    .hosts(Constants.STREAM_HOST)
-                    .endpoint(endpoint)
-                    .authentication(auth)
-                    .processor(new StringDelimitedProcessor(queue))
-                    .build()
+      .name(config.getString(TwitterSourceConfig.TWITTER_APP_NAME))
+      .hosts(Constants.STREAM_HOST)
+      .endpoint(endpoint)
+      .authentication(auth)
+      .processor(new StringDelimitedProcessor(queue))
+      .build()
 
-    new TwitterStreamReader(client = client)
+    new TwitterStreamReader(client = client, rawqueue = queue)
   }
 }
