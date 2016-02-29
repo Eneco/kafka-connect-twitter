@@ -1,3 +1,5 @@
+/twitter-source.properties.example
+/connect-standalone.properties
 twitter-source.properties
 /kafka-connect-twitter.iml
 /.idea
