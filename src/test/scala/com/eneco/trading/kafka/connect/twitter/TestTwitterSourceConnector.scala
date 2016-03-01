@@ -1,5 +1,7 @@
 package com.eneco.trading.kafka.connect.twitter
 
+import org.apache.kafka.connect.errors.ConnectException
+
 import scala.collection.JavaConverters._
 
 /**
@@ -17,7 +19,7 @@ class TestTwitterSourceConnector extends TestTwitterBase {
 
   test("A TwitterSourceConnector shouldn't start with invalid properties") {
     val t = new TwitterSourceConnector()
-    an[Exception] should be thrownBy {
+    a[ConnectException] should be thrownBy {
       t.start(badProps.asJava)
     }
   }
