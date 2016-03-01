@@ -24,6 +24,9 @@ object TwitterSourceConfig {
   val TWITTER_APP_NAME = "twitter.app.name"
   val TWITTER_APP_NAME_DOC = "Twitter app name"
   val TWITTER_APP_NAME_DEFAULT = "KafkaConnectTwitterSource"
+  val BATCH_SIZE = "batch.size"
+  val BATCH_SIZE_DOC = "Batch size to write to Kafka (Drains the queue supplied to the hbc client"
+  val BATCH_SIZE_DEFAULT = 100
 
   val config: ConfigDef = new ConfigDef()
         .define(CONSUMER_KEY_CONFIG, Type.STRING, Importance.HIGH, CONSUMER_KEY_CONFIG_DOC)
@@ -32,6 +35,7 @@ object TwitterSourceConfig {
         .define(SECRET_CONFIG, Type.STRING, Importance.HIGH, SECRET_CONFIG_DOC)
         .define(TRACK_TERMS, Type.LIST, TRACK_TERMS_DEFAULT, Importance.LOW, TRACK_TERMS_DOC)
         .define(TWITTER_APP_NAME, Type.STRING, TWITTER_APP_NAME_DEFAULT, Importance.HIGH, TWITTER_APP_NAME_DOC)
+        .define(BATCH_SIZE, Type.INT, BATCH_SIZE_DEFAULT, Importance.HIGH, BATCH_SIZE_DOC)
 }
 
 class TwitterSourceConfig(props: util.Map[String, String])

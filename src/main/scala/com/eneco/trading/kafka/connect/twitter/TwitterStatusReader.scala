@@ -1,7 +1,7 @@
 package com.eneco.trading.kafka.connect.twitter
 
-import java.util.Collections
-import java.util.concurrent.{Executors, LinkedBlockingQueue, TimeUnit}
+import java.util
+import java.util.concurrent.{Executors, LinkedBlockingQueue}
 import com.eneco.trading.kafka.connect.twitter.domain.TwitterStatus
 import com.twitter.hbc.httpclient.BasicClient
 import com.twitter.hbc.twitter4j.Twitter4jStatusClient
@@ -31,32 +31,29 @@ class StatusEnqueuer(queue: LinkedBlockingQueue[Status]) extends StatusListener 
   * Created by andrew@datamountaineer.com on 24/02/16. 
   * kafka-connect-twitter
   */
-class TwitterStreamReader(client: BasicClient, rawqueue: LinkedBlockingQueue[String]) extends Logging {
+class TwitterStatusReader(client: BasicClient, rawQueue: LinkedBlockingQueue[String], batchSize : Int) extends Logging {
   log.info("Initialising Twitter Stream Reader")
   val statusQueue = new LinkedBlockingQueue[Status](10000)
 
   //Construct the status client
   val t4jClient = new Twitter4jStatusClient(
                         client,
-                        rawqueue,
+                        rawQueue,
                         List[StatusListener](new StatusEnqueuer(statusQueue)).asJava,
-                        Executors.newFixedThreadPool(1) )
+                        Executors.newFixedThreadPool(1))
+
   //connect and subscribe
   t4jClient.connect()
   t4jClient.process()
 
   /**
     * Drain the queue
+    *
     * @return A List of SinkRecords
     * */
-  def poll() : List[SourceRecord] = {
+  def poll() : util.List[SourceRecord] = {
     if (client.isDone) log.warn("Client connection closed unexpectedly: ", client.getExitEvent.getMessage)
-
-    val status = Option(statusQueue.poll(1, TimeUnit.SECONDS))
-    status match {
-      case Some(status) => buildRecords(status)
-      case _ => List[SourceRecord]()
-    }
+    (1 to batchSize).map(i=>statusQueue.take()).map(r=>buildRecords(r)).toList.asJava
   }
 
   /**
@@ -65,22 +62,21 @@ class TwitterStreamReader(client: BasicClient, rawqueue: LinkedBlockingQueue[Str
     * @param status A Twitter4j Status
     * @return A list of SourceRecords
     * */
-  def buildRecords(status: Status) : List[SourceRecord] = {
+  def buildRecords(status: Status) : SourceRecord = {
     val ts = TwitterStatus.struct(TwitterStatus(status))
-    List[SourceRecord](
-      new SourceRecord(
-        Collections.singletonMap("TODO", "TODO"), //source partitions?
-        Collections.singletonMap("TODO2", "TODO2"), //source offsets?
+    new SourceRecord(
+        Map("tweetSource"-> status.getSource).asJava, //source partitions?
+        Map("tweetId"-> status.getId).asJava, //source offsets?
         "tweeters",
         ts.schema(),
         ts)
-    )
   }
 
   /**
     * Stop the HBC client
     * */
   def stop() = {
+    log.info("Stop Twitter client")
     client.stop()
   }
 }
