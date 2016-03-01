@@ -28,4 +28,9 @@ class TestTwitterSourceConnector extends TestTwitterBase {
     val t = new TwitterSourceConnector()
     t.taskClass() should be (classOf[TwitterSourceTask])
   }
+
+  test("A TwitterSourceConnector should return a taskConfig for each task") {
+    val t = new TwitterSourceConnector()
+    t.taskConfigs(42).size() should be 42
+  }
 }
