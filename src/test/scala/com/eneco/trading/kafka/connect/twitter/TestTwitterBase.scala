@@ -13,7 +13,8 @@ trait TestTwitterBase extends FunSuite with Matchers with BeforeAndAfter {
       TwitterSourceConfig.SECRET_CONFIG->"secret",
       TwitterSourceConfig.TOKEN_CONFIG->"token",
       TwitterSourceConfig.TRACK_TERMS->"term1",
-      TwitterSourceConfig.TWITTER_APP_NAME->"myApp"
+      TwitterSourceConfig.TWITTER_APP_NAME->"myApp",
+      TwitterSourceConfig.BATCH_SIZE->"1337"
     )
   }
 }
