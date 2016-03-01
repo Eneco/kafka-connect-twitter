@@ -17,5 +17,6 @@ class TestTwitterSourceConfig extends TestTwitterBase {
     taskConfig.getList(TwitterSourceConfig.TRACK_TERMS).asScala.head shouldBe "term1"
     taskConfig.getString(TwitterSourceConfig.TWITTER_APP_NAME) shouldBe "myApp"
     taskConfig.getInt(TwitterSourceConfig.BATCH_SIZE) shouldBe 1337
+    taskConfig.getString(TwitterSourceConfig.TOPIC) shouldBe "just-a-topic"
   }
 }
