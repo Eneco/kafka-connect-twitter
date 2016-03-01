@@ -27,15 +27,19 @@ object TwitterSourceConfig {
   val BATCH_SIZE = "batch.size"
   val BATCH_SIZE_DOC = "Batch size to write to Kafka (Drains the queue supplied to the hbc client"
   val BATCH_SIZE_DEFAULT = 100
+  val TOPIC = "topic"
+  val TOPIC_DOC = "The Kafka topic to append to"
+  val TOPIC_DEFAULT = "tweets"
 
   val config: ConfigDef = new ConfigDef()
-        .define(CONSUMER_KEY_CONFIG, Type.STRING, Importance.HIGH, CONSUMER_KEY_CONFIG_DOC)
-        .define(CONSUMER_SECRET_CONFIG, Type.STRING, Importance.HIGH, CONSUMER_SECRET_CONFIG_DOC)
-        .define(TOKEN_CONFIG, Type.STRING, Importance.HIGH, TOKEN_CONFIG_DOC)
-        .define(SECRET_CONFIG, Type.STRING, Importance.HIGH, SECRET_CONFIG_DOC)
-        .define(TRACK_TERMS, Type.LIST, TRACK_TERMS_DEFAULT, Importance.LOW, TRACK_TERMS_DOC)
-        .define(TWITTER_APP_NAME, Type.STRING, TWITTER_APP_NAME_DEFAULT, Importance.HIGH, TWITTER_APP_NAME_DOC)
-        .define(BATCH_SIZE, Type.INT, BATCH_SIZE_DEFAULT, Importance.HIGH, BATCH_SIZE_DOC)
+    .define(CONSUMER_KEY_CONFIG, Type.STRING, Importance.HIGH, CONSUMER_KEY_CONFIG_DOC)
+    .define(CONSUMER_SECRET_CONFIG, Type.STRING, Importance.HIGH, CONSUMER_SECRET_CONFIG_DOC)
+    .define(TOKEN_CONFIG, Type.STRING, Importance.HIGH, TOKEN_CONFIG_DOC)
+    .define(SECRET_CONFIG, Type.STRING, Importance.HIGH, SECRET_CONFIG_DOC)
+    .define(TRACK_TERMS, Type.LIST, TRACK_TERMS_DEFAULT, Importance.LOW, TRACK_TERMS_DOC)
+    .define(TWITTER_APP_NAME, Type.STRING, TWITTER_APP_NAME_DEFAULT, Importance.HIGH, TWITTER_APP_NAME_DOC)
+    .define(BATCH_SIZE, Type.INT, BATCH_SIZE_DEFAULT, Importance.HIGH, BATCH_SIZE_DOC)
+    .define(TOPIC, Type.STRING, TOPIC_DEFAULT, Importance.HIGH, TOPIC_DOC)
 }
 
 class TwitterSourceConfig(props: util.Map[String, String])

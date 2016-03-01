@@ -31,7 +31,7 @@ class StatusEnqueuer(queue: LinkedBlockingQueue[Status]) extends StatusListener 
   * Created by andrew@datamountaineer.com on 24/02/16. 
   * kafka-connect-twitter
   */
-class TwitterStatusReader(client: BasicClient, rawQueue: LinkedBlockingQueue[String], batchSize : Int) extends Logging {
+class TwitterStatusReader(client: BasicClient, rawQueue: LinkedBlockingQueue[String], batchSize : Int, topic: String) extends Logging {
   log.info("Initialising Twitter Stream Reader")
   val statusQueue = new LinkedBlockingQueue[Status](10000)
 
@@ -67,7 +67,7 @@ class TwitterStatusReader(client: BasicClient, rawQueue: LinkedBlockingQueue[Str
     new SourceRecord(
         Map("tweetSource"-> status.getSource).asJava, //source partitions?
         Map("tweetId"-> status.getId).asJava, //source offsets?
-        "tweeters",
+        topic,
         ts.schema(),
         ts)
   }
