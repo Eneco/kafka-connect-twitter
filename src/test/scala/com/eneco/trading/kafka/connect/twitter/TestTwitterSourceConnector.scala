@@ -21,4 +21,9 @@ class TestTwitterSourceConnector extends TestTwitterBase {
       t.start(badProps.asJava)
     }
   }
+
+  test("A TwitterSourceConnector should provide the correct taskClass") {
+    val t = new TwitterSourceConnector()
+    t.taskClass() should be (classOf[TwitterSourceTask])
+  }
 }
