@@ -49,7 +49,7 @@ class TwitterStatusReader(client: BasicClient, rawQueue: LinkedBlockingQueue[Str
   /**
     * Drain the queue
     *
-    * @return A List of SinkRecords
+    * @return A List of SourceRecords
     * */
   def poll() : util.List[SourceRecord] = {
     if (client.isDone) log.warn("Client connection closed unexpectedly: ", client.getExitEvent.getMessage)
