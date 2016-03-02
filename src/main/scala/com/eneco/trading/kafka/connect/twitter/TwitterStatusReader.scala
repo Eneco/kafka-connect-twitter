@@ -1,14 +1,14 @@
 package com.eneco.trading.kafka.connect.twitter
 
 import java.util
-import java.util.concurrent.{Executors, LinkedBlockingQueue}
+import java.util.concurrent.{TimeUnit, LinkedBlockingQueue, Executors}
 import com.eneco.trading.kafka.connect.twitter.domain.TwitterStatus
 import com.twitter.hbc.httpclient.BasicClient
 import com.twitter.hbc.twitter4j.Twitter4jStatusClient
 import org.apache.kafka.connect.source.SourceRecord
 import twitter4j._
 import scala.collection.JavaConverters._
-
+import Extensions._
 
 class StatusEnqueuer(queue: LinkedBlockingQueue[Status]) extends StatusListener with Logging {
   override def onStallWarning(stallWarning: StallWarning) = log.warn("onStallWarning")
@@ -31,7 +31,7 @@ class StatusEnqueuer(queue: LinkedBlockingQueue[Status]) extends StatusListener 
   * Created by andrew@datamountaineer.com on 24/02/16. 
   * kafka-connect-twitter
   */
-class TwitterStatusReader(client: BasicClient, rawQueue: LinkedBlockingQueue[String], batchSize : Int) extends Logging {
+class TwitterStatusReader(client: BasicClient, rawQueue: LinkedBlockingQueue[String], batchSize : Int, topic: String) extends Logging {
   log.info("Initialising Twitter Stream Reader")
   val statusQueue = new LinkedBlockingQueue[Status](10000)
 
@@ -49,11 +49,14 @@ class TwitterStatusReader(client: BasicClient, rawQueue: LinkedBlockingQueue[Str
   /**
     * Drain the queue
     *
-    * @return A List of SinkRecords
+    * @return A List of SourceRecords
     * */
   def poll() : util.List[SourceRecord] = {
-    if (client.isDone) log.warn("Client connection closed unexpectedly: ", client.getExitEvent.getMessage)
-    (1 to batchSize).map(i=>statusQueue.take()).map(r=>buildRecords(r)).toList.asJava
+    if (client.isDone) log.warn("Client connection closed unexpectedly: ", client.getExitEvent.getMessage) //TODO: what next?
+
+    val l = new util.ArrayList[Status]()
+    statusQueue.drainWithTimeoutTo(l, batchSize, 1, TimeUnit.SECONDS)
+    l.asScala.map(buildRecords).asJava
   }
 
   /**
@@ -67,7 +70,7 @@ class TwitterStatusReader(client: BasicClient, rawQueue: LinkedBlockingQueue[Str
     new SourceRecord(
         Map("tweetSource"-> status.getSource).asJava, //source partitions?
         Map("tweetId"-> status.getId).asJava, //source offsets?
-        "tweeters",
+        topic,
         ts.schema(),
         ts)
   }

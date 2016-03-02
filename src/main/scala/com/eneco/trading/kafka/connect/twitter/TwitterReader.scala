@@ -29,6 +29,9 @@ object TwitterReader {
     //batch size to take from the queue
     val batchSize = config.getInt(TwitterSourceConfig.BATCH_SIZE)
 
+    //The Kafka topic to append to
+    val topic = config.getString(TwitterSourceConfig.TOPIC)
+
     //queue for client to buffer to
     val queue = new LinkedBlockingQueue[String](10000)
 
@@ -41,6 +44,6 @@ object TwitterReader {
       .processor(new StringDelimitedProcessor(queue))
       .build()
 
-    new TwitterStatusReader(client = client, rawQueue = queue, batchSize = batchSize)
+    new TwitterStatusReader(client = client, rawQueue = queue, batchSize = batchSize, topic = topic)
   }
 }

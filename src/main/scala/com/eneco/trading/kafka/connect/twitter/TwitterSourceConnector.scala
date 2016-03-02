@@ -14,7 +14,7 @@ class TwitterSourceConnector extends Connector with Logging {
   private var configProps : util.Map[String, String] = null
 
   /**
-    * States which SinkTask class to use
+    * States which SourceTask class to use
     * */
   override def taskClass(): Class[_ <: Task] = classOf[TwitterSourceTask]
 
@@ -30,7 +30,7 @@ class TwitterSourceConnector extends Connector with Logging {
   }
 
   /**
-    * Start the sink and set to configuration
+    * Start the source and set to configuration
     *
     * @param props A map of properties for the connector and worker
     * */

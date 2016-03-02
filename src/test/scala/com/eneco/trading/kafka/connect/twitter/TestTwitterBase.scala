@@ -9,11 +9,13 @@ import org.scalatest.{FunSuite, Matchers, BeforeAndAfter}
 trait TestTwitterBase extends FunSuite with Matchers with BeforeAndAfter {
   def getConfig = {
     Map(TwitterSourceConfig.CONSUMER_KEY_CONFIG->"test",
-      TwitterSourceConfig.CONSUMER_SECRET_CONFIG->"secret",
+      TwitterSourceConfig.CONSUMER_SECRET_CONFIG->"c-secret",
       TwitterSourceConfig.SECRET_CONFIG->"secret",
       TwitterSourceConfig.TOKEN_CONFIG->"token",
       TwitterSourceConfig.TRACK_TERMS->"term1",
-      TwitterSourceConfig.TWITTER_APP_NAME->"myApp"
+      TwitterSourceConfig.TWITTER_APP_NAME->"myApp",
+      TwitterSourceConfig.BATCH_SIZE->"1337",
+      TwitterSourceConfig.TOPIC->"just-a-topic"
     )
   }
 }
