@@ -13,15 +13,19 @@ Properties
 
 In addition to the default topics configuration the following options are added:
 
-| name                     | data type | required | description                 |
-|:-------------------------|:----------|:---------|:----------------------------|
-| `twitter.consumerkey`    | string    | yes      | Twitter consumer key        |
-| `twitter.consumersecret` | string    | yes      | Twitter consumer secret     |
-| `twitter.token`          | string    | yes      | Twitter token               |
-| `twitter.secret`         | string    | yes      | Twitter secret              |
-| `track.terms`            | string    | yes      | A Twitter `track` parameter |
+| name                     | data type | required | default | description                     |
+|:-------------------------|:----------|:---------|:--------|:--------------------------------|
+| `twitter.consumerkey`    | string    | yes      |         | Twitter consumer key            |
+| `twitter.consumersecret` | string    | yes      |         | Twitter consumer secret         |
+| `twitter.token`          | string    | yes      |         | Twitter token                   |
+| `twitter.secret`         | string    | yes      |         | Twitter secret                  |
+| `track.terms`            | string    | yes      |         | A Twitter `track` parameter ¹   |
+| `batch.size`             | int       | no       | 100     | Flush after this many tweets ²  |
+| `batch.timeout`          | double    | no       | 0.1     | Flush after this many seconds ² |
 
-Please refer to [here](https://dev.twitter.com/streaming/overview/request-parameters#track) for the format of the `track` parameter.
+¹ Please refer to [here](https://dev.twitter.com/streaming/overview/request-parameters#track) for the format of the `track` parameter.
+
+² Tweets are accumulated and flushed as a batch into Kafka; when the batch is larger than `batch.size` or when the oldest tweet in it is older than `batch.timeout` [s], it is flushed.
 
 An example `twitter-source.properties`:
 
