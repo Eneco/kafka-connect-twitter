@@ -20,13 +20,15 @@ object TwitterSourceConfig {
   val SECRET_CONFIG_DOC = "Twitter account secret."
   val TRACK_TERMS = "track.terms"
   val TRACK_TERMS_DOC = "Twitter terms to track."
-  val TRACK_TERMS_DEFAULT = ""
   val TWITTER_APP_NAME = "twitter.app.name"
   val TWITTER_APP_NAME_DOC = "Twitter app name"
   val TWITTER_APP_NAME_DEFAULT = "KafkaConnectTwitterSource"
   val BATCH_SIZE = "batch.size"
-  val BATCH_SIZE_DOC = "Batch size to write to Kafka (Drains the queue supplied to the hbc client"
+  val BATCH_SIZE_DOC = "Batch size to write to Kafka (Drains the queue supplied to the hbc client)."
   val BATCH_SIZE_DEFAULT = 100
+  val BATCH_TIMEOUT = "batch.timeout"
+  val BATCH_TIMEOUT_DOC = "Batch timeout in seconds to write to Kafka (Drains the queue supplied to the hbc client)."
+  val BATCH_TIMEOUT_DEFAULT = 0.1
   val TOPIC = "topic"
   val TOPIC_DOC = "The Kafka topic to append to"
   val TOPIC_DEFAULT = "tweets"
@@ -36,9 +38,10 @@ object TwitterSourceConfig {
     .define(CONSUMER_SECRET_CONFIG, Type.STRING, Importance.HIGH, CONSUMER_SECRET_CONFIG_DOC)
     .define(TOKEN_CONFIG, Type.STRING, Importance.HIGH, TOKEN_CONFIG_DOC)
     .define(SECRET_CONFIG, Type.STRING, Importance.HIGH, SECRET_CONFIG_DOC)
-    .define(TRACK_TERMS, Type.LIST, TRACK_TERMS_DEFAULT, Importance.LOW, TRACK_TERMS_DOC)
+    .define(TRACK_TERMS, Type.LIST, Importance.HIGH, TRACK_TERMS_DOC)
     .define(TWITTER_APP_NAME, Type.STRING, TWITTER_APP_NAME_DEFAULT, Importance.HIGH, TWITTER_APP_NAME_DOC)
-    .define(BATCH_SIZE, Type.INT, BATCH_SIZE_DEFAULT, Importance.HIGH, BATCH_SIZE_DOC)
+    .define(BATCH_SIZE, Type.INT, BATCH_SIZE_DEFAULT, Importance.MEDIUM, BATCH_SIZE_DOC)
+    .define(BATCH_TIMEOUT, Type.DOUBLE, BATCH_TIMEOUT_DEFAULT, Importance.MEDIUM, BATCH_TIMEOUT_DOC)
     .define(TOPIC, Type.STRING, TOPIC_DEFAULT, Importance.HIGH, TOPIC_DOC)
 }
 
