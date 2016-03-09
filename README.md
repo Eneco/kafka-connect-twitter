@@ -90,7 +90,8 @@ Work in progress!
 
 Todo:
 -----
-
+-   Add hosebird client mode to take the full fat response rather than the twitter4j subset. Needs json to Avro converter. Avro4s?
+-   Split the track terms up and assign to workers? Limits on connections to twitter?
 -   [ ] Extend
 -   [ ] Test
 -   [ ] Document
