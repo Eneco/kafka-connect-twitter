@@ -13,19 +13,33 @@ Properties
 
 In addition to the default topics configuration the following options are added:
 
-| name                     | data type | required | default | description                     |
-|:-------------------------|:----------|:---------|:--------|:--------------------------------|
-| `twitter.consumerkey`    | string    | yes      |         | Twitter consumer key            |
-| `twitter.consumersecret` | string    | yes      |         | Twitter consumer secret         |
-| `twitter.token`          | string    | yes      |         | Twitter token                   |
-| `twitter.secret`         | string    | yes      |         | Twitter secret                  |
-| `track.terms`            | string    | yes      |         | A Twitter `track` parameter ¹   |
-| `batch.size`             | int       | no       | 100     | Flush after this many tweets ²  |
-| `batch.timeout`          | double    | no       | 0.1     | Flush after this many seconds ² |
+| name                     | data type | required | default | description                         |
+|:-------------------------|:----------|:---------|:--------|:------------------------------------|
+| `twitter.consumerkey`    | string    | yes      |         | Twitter consumer key                |
+| `twitter.consumersecret` | string    | yes      |         | Twitter consumer secret             |
+| `twitter.token`          | string    | yes      |         | Twitter token                       |
+| `twitter.secret`         | string    | yes      |         | Twitter secret                      |
+| `stream.type`            | string    | no       | filter  | Type of stream ¹                    |
+| `track.terms`            | string    | maybe ²  |         | A Twitter `track` parameter ²       |
+| `track.locations`        | string    | maybe ²  |         | A Twitter `locations` parameter ³   |
+| `track.follow`           | string    | maybe ²  |         | A Twitter `follow` parameter ⁴      |
+| `batch.size`             | int       | no       | 100     | Flush after this many tweets ⁶      |
+| `batch.timeout`          | double    | no       | 0.1     | Flush after this many seconds ⁶     |
+| `language`               | string    | no       |         | List of languages to fetch ⁷        |
 
-¹ Please refer to [here](https://dev.twitter.com/streaming/overview/request-parameters#track) for the format of the `track` parameter.
+¹ Type of stream: [filter](https://dev.twitter.com/streaming/reference/post/statuses/filter), or [sample](https://dev.twitter.com/streaming/reference/get/statuses/sample).
 
-² Tweets are accumulated and flushed as a batch into Kafka; when the batch is larger than `batch.size` or when the oldest tweet in it is older than `batch.timeout` [s], it is flushed.
+² When the `filter` type is used, one of the parameters `track.terms`, `track.locations`, or `track.follow` should be specified.  If multiple parameters are specified, they are working as OR operation.
+
+³ Please refer to [here](https://dev.twitter.com/streaming/overview/request-parameters#track) for the format of the `track` parameter.
+
+⁴ Please refer to [here](https://dev.twitter.com/streaming/overview/request-parameters#locations) for the format of the `locations` parameter.
+
+⁵ Please refer to [here](https://dev.twitter.com/streaming/overview/request-parameters#follow) for the format of the `follow` parameter.
+
+⁶ Tweets are accumulated and flushed as a batch into Kafka; when the batch is larger than `batch.size` or when the oldest tweet in it is older than `batch.timeout` [s], it is flushed.
+
+⁷ List of languages for which tweets will be returned. Can be used with any stream type.  See [here](https://dev.twitter.com/streaming/overview/request-parameters#language) for format of the `language` parameter.
 
 An example `twitter-source.properties`:
 
@@ -68,7 +82,7 @@ Starting kafka-connect-twitter
 
 Having cloned this repository, build the latest source code with:
 
-    mvn clean install
+    mvn clean package
 
 Put the JAR file location into your `CLASSPATH`:
 

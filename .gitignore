@@ -5,3 +5,7 @@
 # sbt specific
 target/
 # Scala-IDE specific
+/twitter-source.properties
+/.settings
+/.project
+/.classpath
