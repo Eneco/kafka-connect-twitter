@@ -5,9 +5,14 @@ import java.util.concurrent.LinkedBlockingQueue
 import com.twitter.hbc.ClientBuilder
 import com.twitter.hbc.core.Constants
 import com.twitter.hbc.core.endpoint.StatusesFilterEndpoint
+import com.twitter.hbc.core.endpoint.StatusesSampleEndpoint
+import com.twitter.hbc.core.endpoint.DefaultStreamingEndpoint
 import com.twitter.hbc.core.processor.StringDelimitedProcessor
+import com.twitter.hbc.core.endpoint.Location
 import com.twitter.hbc.httpclient.auth.OAuth1
 import org.apache.kafka.connect.source.SourceTaskContext
+import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 /**
   * Created by andrew@datamountaineer.com on 24/02/16. 
@@ -16,9 +21,34 @@ import org.apache.kafka.connect.source.SourceTaskContext
 object TwitterReader {
   def apply(config: TwitterSourceConfig, context: SourceTaskContext) = {
     //endpoints
-    val endpoint = new StatusesFilterEndpoint()
+    val endpoint: DefaultStreamingEndpoint = if (config.getString(TwitterSourceConfig.STREAM_TYPE).equals(TwitterSourceConfig.STREAM_TYPE_SAMPLE)) {
+      new StatusesSampleEndpoint()
+    } else {
+      val trackEndpoint = new StatusesFilterEndpoint()
+      val terms = config.getList(TwitterSourceConfig.TRACK_TERMS) 
+      if (!terms.isEmpty) {
+        trackEndpoint.trackTerms(terms)
+      }
+      val locs = config.getList(TwitterSourceConfig.TRACK_LOCATIONS)
+      if (!locs.isEmpty) {
+        val locations = locs.toList.map({ x => Double.box(x.toDouble)}).grouped(4).toList
+            .map({ l => new Location(new Location.Coordinate(l(0), l(1)), new Location.Coordinate(l(2), l(3)))})
+            .asJava
+        trackEndpoint.locations(locations)
+      }
+      val follow = config.getList(TwitterSourceConfig.TRACK_FOLLOW) 
+      if (!follow.isEmpty) {
+        val users = follow.toList.map({ x => Long.box(x.trim.toLong)}).asJava
+        trackEndpoint.followings(users)
+      }
+      trackEndpoint
+    }
     endpoint.stallWarnings(false)
-    endpoint.trackTerms(config.getList(TwitterSourceConfig.TRACK_TERMS))
+    val language = config.getList(TwitterSourceConfig.LANGUAGE) 
+    if (!language.isEmpty) {
+      // endpoint.languages(language) doesn't work as intended!
+      endpoint.addQueryParameter(TwitterSourceConfig.LANGUAGE, language.toList.mkString(","))
+    }
 
     //twitter auth stuff
     val auth = new OAuth1(config.getString(TwitterSourceConfig.CONSUMER_KEY_CONFIG),
@@ -45,6 +75,7 @@ object TwitterReader {
       .processor(new StringDelimitedProcessor(queue))
       .build()
 
-    new TwitterStatusReader(client = client, rawQueue = queue, batchSize = batchSize, batchTimeout = batchTimeout, topic = topic)
+    new TwitterStatusReader(client = client, rawQueue = queue, batchSize = batchSize, 
+        batchTimeout = batchTimeout, topic = topic)
   }
 }

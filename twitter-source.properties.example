@@ -6,3 +6,11 @@ twitter.consumerkey=
 twitter.consumersecret=
 twitter.token=
 twitter.secret=
+# language=en,ru,de
+# stream.type=sample
+# stream.type=filter
+# track.terms=news,music,hadoop,clojure,scala,fp,golang,python,fsharp,cpp,java
+# San Francisco OR New York City
+#track.locations=-122.75,36.8,-121.75,37.8,-74,40,-73,41
+# bbcbreaking,bbcnews,justinbieber
+# track.follow=5402612,612473,27260086

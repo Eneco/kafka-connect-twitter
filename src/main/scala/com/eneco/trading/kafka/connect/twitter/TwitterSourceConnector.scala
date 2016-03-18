@@ -38,7 +38,8 @@ class TwitterSourceConnector extends Connector with Logging {
     log.info(s"Starting Twitter source task with ${props.toString}.")
     configProps = props
     Try(new TwitterSourceConfig(props)) match {
-      case Failure(f) => throw new ConnectException("Couldn't start Twitter source due to configuration error.", f)
+      case Failure(f) => throw new ConnectException("Couldn't start Twitter source due to configuration error: "
+          + f.getMessage, f)
       case _ =>
     }
   }
