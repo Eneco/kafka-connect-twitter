@@ -4,7 +4,7 @@ import java.util
 import org.apache.kafka.connect.source.{SourceRecord, SourceTask}
 
 /**
-  * Created by andrew@datamountaineer.com on 24/02/16. 
+  * Created by andrew@datamountaineer.com on 24/02/16.
   * kafka-connect-twitter
   */
 class TwitterSourceTask extends SourceTask with Logging {
