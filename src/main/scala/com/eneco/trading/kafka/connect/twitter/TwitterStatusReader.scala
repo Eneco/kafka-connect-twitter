@@ -15,11 +15,11 @@ class StatusEnqueuer(queue: LinkedBlockingQueue[Status]) extends StatusListener 
   override def onDeletionNotice(statusDeletionNotice: StatusDeletionNotice) = log.info("onDeletionNotice")
 
   override def onScrubGeo(l: Long, l1: Long) = {
-    log.info(s"onScrubGeo $l $l1")
+    log.debug(s"onScrubGeo $l $l1")
   }
 
   override def onStatus(status: Status) = {
-    log.info("onStatus")
+    log.debug("onStatus")
     queue.put(status)
   }
 
