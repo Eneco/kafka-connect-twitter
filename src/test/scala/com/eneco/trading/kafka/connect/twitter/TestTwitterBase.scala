@@ -18,4 +18,12 @@ trait TestTwitterBase extends FunSuite with Matchers with BeforeAndAfter {
       TwitterSourceConfig.TOPIC->"just-a-topic"
     )
   }
+  def getSinkConfig = {
+    Map(TwitterSinkConfig.CONSUMER_KEY_CONFIG->"test",
+      TwitterSinkConfig.CONSUMER_SECRET_CONFIG->"c-secret",
+      TwitterSinkConfig.SECRET_CONFIG->"secret",
+      TwitterSinkConfig.TOKEN_CONFIG->"token",
+      TwitterSinkConfig.TOPICS->"just-a-sink-topic"
+    )
+  }
 }
