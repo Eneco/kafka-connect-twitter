@@ -75,26 +75,30 @@ This is all for the sink. The *source* has the following additional properties:
 
 An example `twitter-source.properties`:
 
-    name=twitter-source
-    connector.class=com.eneco.trading.kafka.connect.twitter.TwitterSourceConnector
-    tasks.max=1
-    topic=twitter
-    twitter.consumerkey=(secret)
-    twitter.consumersecret=(secret)
-    twitter.token=(secret)
-    twitter.secret=(secret)
-    track.terms=test
+```properties
+name=twitter-source
+connector.class=com.eneco.trading.kafka.connect.twitter.TwitterSourceConnector
+tasks.max=1
+topic=twitter
+twitter.consumerkey=(secret)
+twitter.consumersecret=(secret)
+twitter.token=(secret)
+twitter.secret=(secret)
+track.terms=test
+```
 
 And an example `twitter-sink.properties` is like:
 
-    name=twitter-sink
-    connector.class=com.eneco.trading.kafka.connect.twitter.TwitterSinkConnector
-    tasks.max=1
-    topics=texts-to-tweet
-    twitter.consumerkey=(secret)
-    twitter.consumersecret=(secret)
-    twitter.token=(secret)
-    twitter.secret=(secret)
+```properties
+name=twitter-sink
+connector.class=com.eneco.trading.kafka.connect.twitter.TwitterSinkConnector
+tasks.max=1
+topics=texts-to-tweet
+twitter.consumerkey=(secret)
+twitter.consumersecret=(secret)
+twitter.token=(secret)
+twitter.secret=(secret)
+```
 
 Creating a Twitter application
 ------------------------------
