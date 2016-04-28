@@ -10,7 +10,8 @@ import com.twitter.hbc.core.endpoint.DefaultStreamingEndpoint
 import com.twitter.hbc.core.processor.StringDelimitedProcessor
 import com.twitter.hbc.core.endpoint.Location
 import com.twitter.hbc.httpclient.auth.OAuth1
-import org.apache.kafka.connect.source.SourceTaskContext
+import org.apache.kafka.connect.source.{SourceRecord, SourceTaskContext}
+import twitter4j.Status
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 
@@ -66,6 +67,12 @@ object TwitterReader {
     //queue for client to buffer to
     val queue = new LinkedBlockingQueue[String](10000)
 
+    //how the output is formatted
+    val statusConverter = config.getString(TwitterSourceConfig.OUTPUT_FORMAT) match {
+      case TwitterSourceConfig.OUTPUT_FORMAT_ENUM_STRING => StatusToStringKeyValue
+      case TwitterSourceConfig.OUTPUT_FORMAT_ENUM_STRUCTURED => StatusToTwitterStatusStructure
+    }
+
     //build basic client
     val client = new ClientBuilder()
       .name(config.getString(TwitterSourceConfig.TWITTER_APP_NAME))
@@ -76,6 +83,6 @@ object TwitterReader {
       .build()
 
     new TwitterStatusReader(client = client, rawQueue = queue, batchSize = batchSize, 
-        batchTimeout = batchTimeout, topic = topic)
+        batchTimeout = batchTimeout, topic = topic, statusConverter = statusConverter)
   }
 }
