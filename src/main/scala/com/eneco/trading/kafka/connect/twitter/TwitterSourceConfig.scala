@@ -45,6 +45,11 @@ object TwitterSourceConfig {
   val TOPIC_DEFAULT = "tweets"
   val LANGUAGE = "language"
   val LANGUAGE_DOC = "List of languages to filter"
+  val OUTPUT_FORMAT = "output.format"
+  val OUTPUT_FORMAT_ENUM_STRUCTURED = "structured"
+  val OUTPUT_FORMAT_ENUM_STRING = "string"
+  val OUTPUT_FORMAT_DOC = s"How the output is formatted, can be either ${OUTPUT_FORMAT_ENUM_STRING} for (key=username:string, value=text:string), or ${OUTPUT_FORMAT_ENUM_STRUCTURED} for value=structure:TwitterStatus."
+  val OUTPUT_FORMAT_DEFAULT = "structured"
   val EMPTY_VALUE = ""
 
   val config: ConfigDef = new ConfigDef()
@@ -61,6 +66,7 @@ object TwitterSourceConfig {
     .define(BATCH_TIMEOUT, Type.DOUBLE, BATCH_TIMEOUT_DEFAULT, Importance.MEDIUM, BATCH_TIMEOUT_DOC)
     .define(TOPIC, Type.STRING, TOPIC_DEFAULT, Importance.HIGH, TOPIC_DOC)
     .define(LANGUAGE, Type.LIST, EMPTY_VALUE, Importance.MEDIUM, LANGUAGE_DOC)
+    .define(OUTPUT_FORMAT, Type.STRING, OUTPUT_FORMAT_DEFAULT, Importance.MEDIUM, OUTPUT_FORMAT_DOC)
 }
 
 class TwitterSourceConfig(props: util.Map[String, String])

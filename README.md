@@ -6,13 +6,13 @@ Kafka Connect Twitter
 A Kafka Connect for Twitter. Both a source (from Twitter to Kafka) and sink (from Kafka to Twitter) are provided:
 
 -   The *sink* receives plain strings from Kafka, which are tweeted using [Twitter4j](http://twitter4j.org/);
--   The *source* receives tweets from the [Twitter Streaming API](https://dev.twitter.com/streaming/overview) using [Hosebird](https://github.com/twitter/hbc), which are fed into Kafka as a `TwitterStatus` structure.
+-   The *source* receives tweets from the [Twitter Streaming API](https://dev.twitter.com/streaming/overview) using [Hosebird](https://github.com/twitter/hbc), which are fed into Kafka either as a `TwitterStatus` structure (default) or as plain strings.
 
 Data types
 ==========
 
 -   The *sink* connector expects plain strings (UTF-8 by default) from Kafka (`org.apache.kafka.connect.storage.StringConverter`), i.e. `kafka-console-producer` will do;
--   The *source* connector outputs `TwitterStatus` structures. The Kafka Connect framework is serialization format agnostic. An intermidiate representation is used inside the framework; when an actual Kafka record is to be created, the `key.converter` and `value.converter` properties are used. Chances are that you use Avro (`io.confluent.connect.avro.AvroConverter`) or JSON (`org.apache.kafka.connect.json.JsonConverter`).
+-   The *source* connector either outputs `TwitterStatus` structures (default) or plain strings. The Kafka Connect framework is serialization format agnostic. An intermidiate representation is used inside the framework; when an actual Kafka record is to be created, the `key.converter` and `value.converter` properties are used. Chances are that you use Avro (`io.confluent.connect.avro.AvroConverter`) or JSON (`org.apache.kafka.connect.json.JsonConverter`). When `output.format=string`, both the key and value are strings, with the key the user name and the value the tweet text. Here the `org.apache.kafka.connect.storage.StringConverter` converter must be used.
 
 An actual `TwitterStatus` after JSON conversion, freshly grabbed from Kafka, looks like:
 
@@ -49,15 +49,16 @@ In addition to the default configuration for Kafka connectors (e.g. `name`, `con
 
 This is all for the sink. The *source* has the following additional properties:
 
-| name              | data type | required | default | description                       |
-|:------------------|:----------|:---------|:--------|:----------------------------------|
-| `stream.type`     | string    | no       | filter  | Type of stream ¹                  |
-| `track.terms`     | string    | maybe ²  |         | A Twitter `track` parameter ²     |
-| `track.locations` | string    | maybe ²  |         | A Twitter `locations` parameter ³ |
-| `track.follow`    | string    | maybe ²  |         | A Twitter `follow` parameter ⁴    |
-| `batch.size`      | int       | no       | 100     | Flush after this many tweets ⁶    |
-| `batch.timeout`   | double    | no       | 0.1     | Flush after this many seconds ⁶   |
-| `language`        | string    | no       |         | List of languages to fetch ⁷      |
+| name              | data type | required | default      | description                                    |
+|:------------------|:----------|:---------|:-------------|:-----------------------------------------------|
+| `stream.type`     | string    | no       | filter       | Type of stream ¹                               |
+| `track.terms`     | string    | maybe ²  |              | A Twitter `track` parameter ²                  |
+| `track.locations` | string    | maybe ²  |              | A Twitter `locations` parameter ³              |
+| `track.follow`    | string    | maybe ²  |              | A Twitter `follow` parameter ⁴                 |
+| `batch.size`      | int       | no       | 100          | Flush after this many tweets ⁶                 |
+| `batch.timeout`   | double    | no       | 0.1          | Flush after this many seconds ⁶                |
+| `language`        | string    | no       |              | List of languages to fetch ⁷                   |
+| `output.format`   | string    | no       | `structured` | The output format: [`structured` | `string`] ⁸ |
 
 ¹ Type of stream: [filter](https://dev.twitter.com/streaming/reference/post/statuses/filter), or [sample](https://dev.twitter.com/streaming/reference/get/statuses/sample).
 
@@ -73,9 +74,11 @@ This is all for the sink. The *source* has the following additional properties:
 
 ⁷ List of languages for which tweets will be returned. Can be used with any stream type. See [here](https://dev.twitter.com/streaming/overview/request-parameters#language) for format of the `language` parameter.
 
+⁸ The source can output in two ways: *structured*, where a `TwitterStatus` structures are output as values, or *string*, where both the key and value are strings, with the key the user name and the value the tweet text. Remember to update `key.converter` and `value.converter` appropriately: `io.confluent.connect.avro.AvroConverter` or `org.apache.kafka.connect.json.JsonConverter` for *structured*; `org.apache.kafka.connect.storage.StringConverter` for *string*.
+
 An example `twitter-source.properties`:
 
-```properties
+``` properties
 name=twitter-source
 connector.class=com.eneco.trading.kafka.connect.twitter.TwitterSourceConnector
 tasks.max=1
@@ -89,7 +92,7 @@ track.terms=test
 
 And an example `twitter-sink.properties` is like:
 
-```properties
+``` properties
 name=twitter-sink
 connector.class=com.eneco.trading.kafka.connect.twitter.TwitterSinkConnector
 tasks.max=1
