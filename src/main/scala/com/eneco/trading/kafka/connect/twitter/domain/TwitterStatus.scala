@@ -21,7 +21,7 @@ object TwitterUser {
       .put("name", u.name)
       .put("screenName", u.screenName)
 
-  val schema = SchemaBuilder.struct().name("TwitterUser")
+  val schema = SchemaBuilder.struct().name("com.eneco.trading.kafka.connect.twitter.TwitterUser")
     .field("id", Schema.INT64_SCHEMA)
     .field("name", Schema.STRING_SCHEMA)
     .field("screenName", Schema.STRING_SCHEMA)
@@ -41,7 +41,7 @@ object TwitterStatus {
       .put("text", s.text)
       .put("user", TwitterUser.struct(s.user))
 
-  val schema = SchemaBuilder.struct().name("TwitterStatus")
+  val schema = SchemaBuilder.struct().name("com.eneco.trading.kafka.connect.twitter.TwitterStatus")
     .field("id", Schema.INT64_SCHEMA)
     .field("createdAt", Schema.STRING_SCHEMA)
     .field("favoriteCount", Schema.INT32_SCHEMA)
