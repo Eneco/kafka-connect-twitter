@@ -49,16 +49,16 @@ In addition to the default configuration for Kafka connectors (e.g. `name`, `con
 
 This is all for the sink. The *source* has the following additional properties:
 
-| name              | data type | required | default      | description                                    |
-|:------------------|:----------|:---------|:-------------|:-----------------------------------------------|
-| `stream.type`     | string    | no       | filter       | Type of stream ¹                               |
-| `track.terms`     | string    | maybe ²  |              | A Twitter `track` parameter ²                  |
-| `track.locations` | string    | maybe ²  |              | A Twitter `locations` parameter ³              |
-| `track.follow`    | string    | maybe ²  |              | A Twitter `follow` parameter ⁴                 |
-| `batch.size`      | int       | no       | 100          | Flush after this many tweets ⁶                 |
-| `batch.timeout`   | double    | no       | 0.1          | Flush after this many seconds ⁶                |
-| `language`        | string    | no       |              | List of languages to fetch ⁷                   |
-| `output.format`   | string    | no       | `structured` | The output format: [`structured` | `string`] ⁸ |
+| name              | data type | required | default      | description                                |
+|:------------------|:----------|:---------|:-------------|:-------------------------------------------|
+| `stream.type`     | string    | no       | filter       | Type of stream ¹                           |
+| `track.terms`     | string    | maybe ²  |              | A Twitter `track` parameter ²              |
+| `track.locations` | string    | maybe ²  |              | A Twitter `locations` parameter ³          |
+| `track.follow`    | string    | maybe ²  |              | A Twitter `follow` parameter ⁴             |
+| `batch.size`      | int       | no       | 100          | Flush after this many tweets ⁶             |
+| `batch.timeout`   | double    | no       | 0.1          | Flush after this many seconds ⁶            |
+| `language`        | string    | no       |              | List of languages to fetch ⁷               |
+| `output.format`   | string    | no       | `structured` | The output format: `[structured|string]` ⁸ |
 
 ¹ Type of stream: [filter](https://dev.twitter.com/streaming/reference/post/statuses/filter), or [sample](https://dev.twitter.com/streaming/reference/get/statuses/sample).
 
@@ -141,19 +141,34 @@ Put the JAR file location into your `CLASSPATH`:
 
     export CLASSPATH=`pwd`/target/kafka-connect-twitter-0.1-jar-with-dependencies.jar
 
-### Source
+### Source, structured output mode
 
-To start start a Kafka Connect source instance:
+To start a Kafka Connect source instance:
 
     $CONFLUENT_HOME/bin/connect-standalone connect-source-standalone.properties twitter-source.properties 
 
-And watch tweets come in as JSON:
+And watch Avro `TwitterStatus` tweets come in represented as JSON:
 
     $CONFLUENT_HOME/bin/kafka-avro-console-consumer --topic twitter --zookeeper localhost:2181
 
+### Source, simple (plain strings) output mode
+
+To start a Kafka Connect source instance:
+
+    $CONFLUENT_HOME/bin/connect-standalone connect-simple-source-standalone.properties twitter-simple-source.properties
+
+And watch tweets come in, with the key the user, and the value the tweet text:
+
+    $CONFLUENT_HOME/bin/kafka-console-consumer --zookeeper localhost:2181 \
+          --topic twitter \
+          --formatter kafka.tools.DefaultMessageFormatter \
+          --property print.key=true \
+          --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
+          --property value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+
 ### Sink
 
-To start start a Kafka Connect sink instance:
+To start a Kafka Connect sink instance:
 
     $CONFLUENT_HOME/bin/connect-standalone connect-sink-standalone.properties twitter-sink.properties 
 

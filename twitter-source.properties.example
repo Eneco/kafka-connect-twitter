@@ -6,6 +6,10 @@ twitter.consumerkey=
 twitter.consumersecret=
 twitter.token=
 twitter.secret=
+
+# set output.format to string to output string key/values, it defaults to structured
+#output.format=string
+
 # language=en,ru,de
 # stream.type=sample
 # stream.type=filter
