@@ -20,9 +20,9 @@ object TwitterSinkConfig {
 
   val config: ConfigDef = new ConfigDef()
     .define(CONSUMER_KEY_CONFIG, Type.STRING, Importance.HIGH, CONSUMER_KEY_CONFIG_DOC)
-    .define(CONSUMER_SECRET_CONFIG, Type.STRING, Importance.HIGH, CONSUMER_SECRET_CONFIG_DOC)
+    .define(CONSUMER_SECRET_CONFIG, Type.PASSWORD, Importance.HIGH, CONSUMER_SECRET_CONFIG_DOC)
     .define(TOKEN_CONFIG, Type.STRING, Importance.HIGH, TOKEN_CONFIG_DOC)
-    .define(SECRET_CONFIG, Type.STRING, Importance.HIGH, SECRET_CONFIG_DOC)
+    .define(SECRET_CONFIG, Type.PASSWORD, Importance.HIGH, SECRET_CONFIG_DOC)
     .define(TOPICS, Type.LIST, Importance.HIGH, TOPICS_DOC)
 }
 

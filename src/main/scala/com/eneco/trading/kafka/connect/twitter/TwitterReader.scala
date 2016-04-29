@@ -53,9 +53,9 @@ object TwitterReader {
 
     //twitter auth stuff
     val auth = new OAuth1(config.getString(TwitterSourceConfig.CONSUMER_KEY_CONFIG),
-      config.getString(TwitterSourceConfig.CONSUMER_SECRET_CONFIG),
+      config.getPassword(TwitterSourceConfig.CONSUMER_SECRET_CONFIG).value,
       config.getString(TwitterSourceConfig.TOKEN_CONFIG),
-      config.getString(TwitterSourceConfig.SECRET_CONFIG))
+      config.getPassword(TwitterSourceConfig.SECRET_CONFIG).value)
 
     //batch size to take from the queue
     val batchSize = config.getInt(TwitterSourceConfig.BATCH_SIZE)

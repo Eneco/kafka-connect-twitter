@@ -54,9 +54,9 @@ object TwitterSourceConfig {
 
   val config: ConfigDef = new ConfigDef()
     .define(CONSUMER_KEY_CONFIG, Type.STRING, Importance.HIGH, CONSUMER_KEY_CONFIG_DOC)
-    .define(CONSUMER_SECRET_CONFIG, Type.STRING, Importance.HIGH, CONSUMER_SECRET_CONFIG_DOC)
+    .define(CONSUMER_SECRET_CONFIG, Type.PASSWORD, Importance.HIGH, CONSUMER_SECRET_CONFIG_DOC)
     .define(TOKEN_CONFIG, Type.STRING, Importance.HIGH, TOKEN_CONFIG_DOC)
-    .define(SECRET_CONFIG, Type.STRING, Importance.HIGH, SECRET_CONFIG_DOC)
+    .define(SECRET_CONFIG, Type.PASSWORD, Importance.HIGH, SECRET_CONFIG_DOC)
     .define(STREAM_TYPE, Type.STRING, STREAM_TYPE_DEFAULT, Importance.HIGH, STREAM_TYPE_DOC)
     .define(TRACK_TERMS, Type.LIST, EMPTY_VALUE, Importance.MEDIUM, TRACK_TERMS_DOC)
     .define(TRACK_FOLLOW, Type.LIST, EMPTY_VALUE, Importance.MEDIUM, TRACK_FOLLOW_DOC)

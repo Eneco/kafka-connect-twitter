@@ -11,8 +11,8 @@ class TestTwitterSourceConfig extends TestTwitterBase {
     val config = getConfig
     val taskConfig = new TwitterSourceConfig(config.asJava)
     taskConfig.getString(TwitterSourceConfig.CONSUMER_KEY_CONFIG) shouldBe "test"
-    taskConfig.getString(TwitterSourceConfig.CONSUMER_SECRET_CONFIG) shouldBe "c-secret"
-    taskConfig.getString(TwitterSourceConfig.SECRET_CONFIG) shouldBe "secret"
+    taskConfig.getPassword(TwitterSourceConfig.SECRET_CONFIG).value shouldBe "secret"
+    taskConfig.getPassword(TwitterSourceConfig.CONSUMER_SECRET_CONFIG).value shouldBe "c-secret"
     taskConfig.getString(TwitterSourceConfig.TOKEN_CONFIG) shouldBe "token"
     taskConfig.getList(TwitterSourceConfig.TRACK_TERMS).asScala.head shouldBe "term1"
     taskConfig.getString(TwitterSourceConfig.TWITTER_APP_NAME) shouldBe "myApp"

@@ -16,7 +16,6 @@ class TwitterSourceTask extends SourceTask with Logging {
   }
 
   override def start(props: util.Map[String, String]): Unit = {
-    TwitterSourceConfig.config.parse(props)
     val sourceConfig = new TwitterSourceConfig(props)
     reader = Some(TwitterReader(config = sourceConfig, context = context))
   }
