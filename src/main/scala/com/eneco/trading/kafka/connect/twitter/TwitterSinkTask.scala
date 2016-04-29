@@ -11,11 +11,12 @@ class TwitterSinkTask extends SinkTask with Logging {
   var writer: Option[SimpleTwitterWriter] = None
 
   override def start(props: util.Map[String, String]): Unit = {
+    val sinkConfig = new TwitterSinkConfig(props)
     writer = Some(new TwitterWriter(
-      props.get(TwitterSinkConfig.CONSUMER_KEY_CONFIG),
-      props.get(TwitterSinkConfig.CONSUMER_SECRET_CONFIG),
-      props.get(TwitterSinkConfig.TOKEN_CONFIG),
-      props.get(TwitterSinkConfig.SECRET_CONFIG)))
+      sinkConfig.getString(TwitterSinkConfig.CONSUMER_KEY_CONFIG),
+      sinkConfig.getPassword(TwitterSinkConfig.CONSUMER_SECRET_CONFIG).value,
+      sinkConfig.getString(TwitterSinkConfig.TOKEN_CONFIG),
+      sinkConfig.getPassword(TwitterSinkConfig.SECRET_CONFIG).value))
   }
 
   override def put(records: util.Collection[SinkRecord]): Unit =

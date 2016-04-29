@@ -7,8 +7,8 @@ class TestTwitterSinkConfig extends TestTwitterBase {
       val config = getSinkConfig
       val taskConfig = new TwitterSinkConfig(config.asJava)
       taskConfig.getString(TwitterSinkConfig.CONSUMER_KEY_CONFIG) shouldBe "test"
-      taskConfig.getString(TwitterSinkConfig.CONSUMER_SECRET_CONFIG) shouldBe "c-secret"
-      taskConfig.getString(TwitterSinkConfig.SECRET_CONFIG) shouldBe "secret"
+      taskConfig.getPassword(TwitterSinkConfig.CONSUMER_SECRET_CONFIG).value shouldBe "c-secret"
+      taskConfig.getPassword(TwitterSinkConfig.SECRET_CONFIG).value shouldBe "secret"
       taskConfig.getString(TwitterSinkConfig.TOKEN_CONFIG) shouldBe "token"
       taskConfig.getList(TwitterSinkConfig.TOPICS) shouldBe Seq("just-a-sink-topic").asJava
     }
