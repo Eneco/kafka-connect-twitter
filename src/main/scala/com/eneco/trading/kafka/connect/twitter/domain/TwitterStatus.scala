@@ -1,5 +1,10 @@
 package com.eneco.trading.kafka.connect.twitter.domain
 
+import java.text.{DateFormat, SimpleDateFormat}
+import java.time.{LocalDate, ZoneOffset}
+import java.time.format.DateTimeFormatter
+import java.util.{TimeZone, Date}
+
 import org.apache.kafka.connect.data.{Schema, SchemaBuilder, Struct}
 import twitter4j.{Status, User}
 
@@ -29,8 +34,15 @@ object TwitterUser {
 }
 
 object TwitterStatus {
+  def asIso8601String(d:Date) = {
+    val tz = TimeZone.getTimeZone("UTC")
+    val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ")
+    df.setTimeZone(tz)
+    df.format(new Date())
+  }
+
   def apply(s: Status) = {
-    new TwitterStatus(id = s.getId, createdAt = s.getCreatedAt.toString, favoriteCount = s.getFavoriteCount, text = s.getText, user = TwitterUser(s.getUser))
+    new TwitterStatus(id = s.getId, createdAt = asIso8601String(s.getCreatedAt), favoriteCount = s.getFavoriteCount, text = s.getText, user = TwitterUser(s.getUser))
   }
 
   def struct(s: TwitterStatus) =
