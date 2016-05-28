@@ -36,7 +36,7 @@ object TwitterUser {
 object TwitterStatus {
   def asIso8601String(d:Date) = {
     val tz = TimeZone.getTimeZone("UTC")
-    val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ")
+    val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     df.setTimeZone(tz)
     df.format(new Date())
   }
