@@ -13,6 +13,11 @@ class TwitterSinkConnector extends SinkConnector with Logging {
   private var configProps : util.Map[String, String] = null
 
   /**
+    * Return config definition for sink connector
+    */
+  override def config() = TwitterSinkConfig.config
+
+  /**
     * States which SinkTask class to use
     * */
   override def taskClass(): Class[_ <: Task] = classOf[TwitterSinkTask]

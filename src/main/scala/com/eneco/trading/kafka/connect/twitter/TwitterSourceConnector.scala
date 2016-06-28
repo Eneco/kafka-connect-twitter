@@ -7,11 +7,16 @@ import scala.collection.JavaConverters._
 import scala.util.{Failure, Try}
 
 /**
-  * Created by andrew@datamountaineer.com on 24/02/16. 
+  * Created by andrew@datamountaineer.com on 24/02/16.
   * kafka-connect-twitter
   */
 class TwitterSourceConnector extends Connector with Logging {
   private var configProps : util.Map[String, String] = null
+
+  /**
+    * Return config definition for source connector
+    */
+  override def config() = TwitterSourceConfig.config
 
   /**
     * States which SourceTask class to use
