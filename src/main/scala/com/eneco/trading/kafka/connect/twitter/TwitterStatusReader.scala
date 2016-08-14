@@ -48,13 +48,13 @@ object StatusToStringKeyValue extends StatusToSourceRecord {
 
 object StatusToTwitterStatusStructure extends StatusToSourceRecord {
   def convert(status: Status, topic: String): SourceRecord = {
-    val ts = TwitterStatus.struct(TwitterStatus(status))
+    //val ts = TwitterStatus.struct(TwitterStatus(status))
     new SourceRecord(
       Map("tweetSource" -> status.getSource).asJava, //source partitions?
       Map("tweetId" -> status.getId).asJava, //source offsets?
       topic,
-      ts.schema(),
-      ts)
+      TwitterStatus.schema,
+      TwitterStatus.struct(status))
   }
 }
 
