@@ -56,7 +56,7 @@
     <properties>
         <java.version>1.8</java.version>
         <scala.version>2.11.7</scala.version>
-        <confluent.version>2.0.1</confluent.version>
+        <confluent.version>3.0.0</confluent.version>
         <kafka.version>0.10.0.0</kafka.version>
         <hosebird.version>2.2.0</hosebird.version>
         <avro.version>1.7.7</avro.version>
