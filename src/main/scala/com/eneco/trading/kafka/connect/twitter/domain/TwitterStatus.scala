@@ -72,8 +72,8 @@ object Entities {
     .build()
   val umschema = SchemaBuilder.struct().name("com.eneco.trading.kafka.connect.twitter.UserMention")
     .field("id", Schema.INT64_SCHEMA)
-    .field("name", Schema.STRING_SCHEMA)
-    .field("screen_name", Schema.STRING_SCHEMA)
+    .field("name", Schema.OPTIONAL_STRING_SCHEMA)
+    .field("screen_name", Schema.OPTIONAL_STRING_SCHEMA)
     .build()
 
   val schema = SchemaBuilder.struct().name("com.eneco.trading.kafka.connect.twitter.Entities")
