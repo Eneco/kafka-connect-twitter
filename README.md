@@ -1,4 +1,4 @@
-[![Build Status]](https://travis-ci.org/Eneco/kafka-connect-twitter.svg?branch=master)(https://travis-ci.org/Eneco/kafka-connect-twitter)
+[![Build Status](https://travis-ci.org/Eneco/kafka-connect-twitter.svg?branch=develop)](https://travis-ci.org/Eneco/kafka-connect-twitter)
 
 Kafka Connect Twitter
 =====================
