@@ -1,6 +1,18 @@
+sudo: required
+
+services:
+  - docker
+
 language: scala
 scala: 2.11.7
 jdk: oraclejdk8
 before_script: ulimit -u 30000
 install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dsource.skip=true -DjavaVersion=1.8
 script: mvn install
+
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker login -u="$DOCKER_USER" -p="$DOCKER_PASS";
+    docker build -t eneco/kafka-connect-twitter .;
+    docker push eneco/kafka-connect-twitter;
+    fi
