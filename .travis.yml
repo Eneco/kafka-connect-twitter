@@ -1,5 +1,3 @@
-sudo: required
-
 services:
   - docker
 
@@ -11,8 +9,4 @@ install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dsource.skip=tr
 script: mvn install
 
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login -u="$DOCKER_USER" -p="$DOCKER_PASS";
-    docker build -t eneco/kafka-connect-twitter .;
-    docker push eneco/kafka-connect-twitter;
-    fi
+  - ./deploy.sh
