@@ -42,7 +42,8 @@ object StatusToStringKeyValue extends StatusToSourceRecord {
       Schema.STRING_SCHEMA,
       status.getUser.getScreenName,
       Schema.STRING_SCHEMA,
-      status.getText)
+      status.getText,
+      status.getCreatedAt.getTime)
   }
 }
 
@@ -53,8 +54,12 @@ object StatusToTwitterStatusStructure extends StatusToSourceRecord {
       Map("tweetSource" -> status.getSource).asJava, //source partitions?
       Map("tweetId" -> status.getId).asJava, //source offsets?
       topic,
+      null,
+      null,
+      null,
       TwitterStatus.schema,
-      TwitterStatus.struct(status))
+      TwitterStatus.struct(status),
+      status.getCreatedAt.getTime)
   }
 }
 
