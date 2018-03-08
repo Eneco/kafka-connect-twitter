@@ -55,8 +55,8 @@ object StatusToTwitterStatusStructure extends StatusToSourceRecord {
       Map("tweetId" -> status.getId).asJava, //source offsets?
       topic,
       null,
-      null,
-      null,
+      Schema.STRING_SCHEMA,
+      status.getUser.getScreenName,
       TwitterStatus.schema,
       TwitterStatus.struct(status),
       status.getCreatedAt.getTime)
