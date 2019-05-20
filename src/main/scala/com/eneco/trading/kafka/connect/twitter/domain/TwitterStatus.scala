@@ -54,6 +54,9 @@ object Entities {
           .put("id", um.getId)
           .put("name", um.getName)
           .put("screen_name", um.getScreenName)).asJava)
+      .put("symbols", s.getSymbolEntities.toSeq.map(s =>
+        new Struct(sschema)
+          .put("text", s.getText)).asJava)
 
   val hschema = SchemaBuilder.struct().name("com.eneco.trading.kafka.connect.twitter.Hashtag")
     .field("text", Schema.OPTIONAL_STRING_SCHEMA)
@@ -75,12 +78,16 @@ object Entities {
     .field("name", Schema.OPTIONAL_STRING_SCHEMA)
     .field("screen_name", Schema.OPTIONAL_STRING_SCHEMA)
     .build()
+  val sschema = SchemaBuilder.struct().name("com.eneco.trading.kafka.connect.twitter.Symbol")
+    .field("text", Schema.OPTIONAL_STRING_SCHEMA)
+    .build()
 
   val schema = SchemaBuilder.struct().name("com.eneco.trading.kafka.connect.twitter.Entities")
     .field("hashtags", SchemaBuilder.array(hschema).optional.build())
     .field("media", SchemaBuilder.array(mschema).optional.build())
     .field("urls", SchemaBuilder.array(uschema).optional.build())
     .field("user_mentions", SchemaBuilder.array(umschema).optional.build())
+    .field("symbols", SchemaBuilder.array(sschema).optional().build())
     .build()
 }
 
