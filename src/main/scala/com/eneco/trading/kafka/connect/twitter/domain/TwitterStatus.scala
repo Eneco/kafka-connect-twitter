@@ -54,6 +54,9 @@ object Entities {
           .put("id", um.getId)
           .put("name", um.getName)
           .put("screen_name", um.getScreenName)).asJava)
+      .put("symbols", s.getSymbolEntities.toSeq.map(s =>
+        new Struct(sschema)
+          .put("text", s.getText)).asJava)
 
   val hschema = SchemaBuilder.struct().name("com.eneco.trading.kafka.connect.twitter.Hashtag")
     .field("text", Schema.OPTIONAL_STRING_SCHEMA)
@@ -75,12 +78,16 @@ object Entities {
     .field("name", Schema.OPTIONAL_STRING_SCHEMA)
     .field("screen_name", Schema.OPTIONAL_STRING_SCHEMA)
     .build()
+  val sschema = SchemaBuilder.struct().name("com.eneco.trading.kafka.connect.twitter.Symbol")
+    .field("text", Schema.OPTIONAL_STRING_SCHEMA)
+    .build()
 
   val schema = SchemaBuilder.struct().name("com.eneco.trading.kafka.connect.twitter.Entities")
     .field("hashtags", SchemaBuilder.array(hschema).optional.build())
     .field("media", SchemaBuilder.array(mschema).optional.build())
     .field("urls", SchemaBuilder.array(uschema).optional.build())
     .field("user_mentions", SchemaBuilder.array(umschema).optional.build())
+    .field("symbols", SchemaBuilder.array(sschema).optional().build())
     .build()
 }
 
@@ -92,12 +99,31 @@ object TwitterStatus {
     df.format(if (d == null) { new Date() } else { d })
   }
 
+  def cleanupText(text: String, coords: Seq[(Int, Int)]): String = {
+    val scoords = coords.toSet.toSeq.sorted
+    val sb = new StringBuilder(text)
+    for (coord <- scoords.reverseIterator) {
+      sb.delete(coord._1, coord._2)
+    }
+    sb.toString().replaceAll("\\bRT :?", "").trim
+  }
+
+  def cleanupText(s: twitter4j.Status): String = {
+    val entity_coordinates = s.getHashtagEntities.toSeq.map(h => (h.getStart, h.getEnd)) ++
+      s.getMediaEntities.toSeq.map(m => (m.getStart, m.getEnd)) ++
+      s.getURLEntities.toSeq.map(u => (u.getStart, u.getEnd)) ++
+      s.getSymbolEntities.toSeq.map(s => (s.getStart, s.getEnd)) ++
+      s.getUserMentionEntities.toSeq.map(um => (um.getStart, um.getEnd))
+    cleanupText(s.getText, entity_coordinates)
+  }
+
   def struct(s: twitter4j.Status) =
     new Struct(schema)
       .put("id", s.getId)
       .put("created_at", asIso8601String(s.getCreatedAt))
       .put("user", TwitterUser.struct(s.getUser))
       .put("text", s.getText)
+      .put("clear_text", cleanupText(s))
       .put("lang", s.getLang)
       .put("is_retweet", s.isRetweet)
       .put("entities", Entities.struct(s))
@@ -107,6 +133,7 @@ object TwitterStatus {
     .field("created_at", Schema.OPTIONAL_STRING_SCHEMA)
     .field("user", TwitterUser.schema)
     .field("text", Schema.OPTIONAL_STRING_SCHEMA)
+    .field("clear_text", Schema.OPTIONAL_STRING_SCHEMA)
     .field("lang", Schema.OPTIONAL_STRING_SCHEMA)
     .field("is_retweet", Schema.BOOLEAN_SCHEMA)
     .field("entities", Entities.schema)
